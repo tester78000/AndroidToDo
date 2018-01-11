@@ -1,5 +1,6 @@
 package sm.fr.todoapp.controller;
 
+import android.app.ActionBar;
 import android.content.Intent;
 import android.database.sqlite.SQLiteException;
 import android.support.v7.app.AppCompatActivity;
@@ -24,6 +25,11 @@ public class TaskFormActivity extends AppCompatActivity {
         setContentView(R.layout.activity_task_form);
 
         editTextTaskName = findViewById(R.id.editTextTask);
+
+        ActionBar actionBar = getActionBar();
+        if(actionBar != null){
+            actionBar.setDisplayHomeAsUpEnabled(true);
+        }
     }
 
     public void onValidForm(View view) {

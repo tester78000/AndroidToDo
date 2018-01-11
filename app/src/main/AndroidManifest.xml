@@ -16,7 +16,8 @@
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
-        <activity android:name=".controller.TaskFormActivity"></activity>
+        <activity android:name=".controller.TaskFormActivity"
+            android:parentActivityName=".controller.MainActivity"></activity>
     </application>
 
 </manifest>
