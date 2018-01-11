@@ -56,6 +56,17 @@ public class MainActivity extends AppCompatActivity {
         startActivityForResult(intentNewTask, TASK_FORM);
     }
 
+    public void onCheck(View v){
+        int position = (int)v.getTag();
+        CheckBox check = (CheckBox) v;
+        boolean done = check.isChecked();
+
+        Task task = this.taskList.get(position);
+        task.setDone(done);
+
+        this.dao.persist(task);
+    }
+
     /**
      * ArrayAdapter pour la liste des tâche
      */
@@ -85,6 +96,9 @@ public class MainActivity extends AppCompatActivity {
 
             CheckBox checkDone = v.findViewById(R.id.checkboxTaskDone);
             checkDone.setChecked(currentTask.isDone());
+
+            //Le tag permet de transmettre une information au gestionnaire d'événement
+            checkDone.setTag(position);
 
             return v;
         }
