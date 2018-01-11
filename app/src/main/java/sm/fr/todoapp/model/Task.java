@@ -5,6 +5,7 @@ public class Task {
 
     private String taskName;
     private Boolean done = false;
+    private Long id;
 
     public Task() {
     }
@@ -34,5 +35,22 @@ public class Task {
     public Task setDone(Boolean done) {
         this.done = done;
         return this;
+    }
+
+    public Long getId() {
+        return id;
+    }
+
+    public Task setId(Long id) {
+        this.id = id;
+        return this;
+    }
+
+    public int getDoneAsInteger(){
+        if(this.done){
+            return 1;
+        } else {
+            return 0;
+        }
     }
 }
