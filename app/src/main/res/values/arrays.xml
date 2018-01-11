@@ -1,8 +1,8 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
     <string-array name="task_status">
+        <item>Toutes</item>
         <item>En cours</item>
         <item>Effectuées</item>
-        <item>Toutes</item>
     </string-array>
 </resources>
