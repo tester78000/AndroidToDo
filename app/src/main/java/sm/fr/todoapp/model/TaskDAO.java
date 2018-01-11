@@ -97,7 +97,7 @@ public class TaskDAO implements DAOInterface<Task> {
 
     private ContentValues getContentValuesFromEntity(Task entity){
         ContentValues values = new ContentValues();
-        values.put("taskName", entity.getTaskName());
+        values.put("task_name", entity.getTaskName());
         values.put("done", entity.getDoneAsInteger());
 
         return values;

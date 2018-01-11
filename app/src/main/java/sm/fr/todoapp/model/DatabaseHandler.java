@@ -8,11 +8,11 @@ import android.database.sqlite.SQLiteOpenHelper;
 public class DatabaseHandler extends SQLiteOpenHelper{
 
     private static final String DATABASE_NAME = "todo.db";
-    private static final int DATABASE_VERSION = 1;
+    private static final int DATABASE_VERSION = 2;
 
     private static final String CONTACT_TABLE_SQL = "CREATE TABLE tasks(" +
             "id INTEGER PRIMARY KEY AUTOINCREMENT," +
-            "task8name TEXT NOT NULL," +
+            "task_name TEXT NOT NULL," +
             "done INTEGER NOT NULL)";
 
     public DatabaseHandler(Context context) {
@@ -26,7 +26,7 @@ public class DatabaseHandler extends SQLiteOpenHelper{
 
     @Override
     public void onUpgrade(SQLiteDatabase sqLiteDatabase, int i, int i1) {
-        sqLiteDatabase.execSQL("DROP TABLE IF EXISTS contacts");
+        sqLiteDatabase.execSQL("DROP TABLE IF EXISTS tasks");
         this.onCreate(sqLiteDatabase);
     }
 }
