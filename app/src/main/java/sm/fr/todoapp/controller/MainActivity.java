@@ -10,9 +10,11 @@ import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.CheckBox;
 import android.widget.ListView;
+import android.widget.Spinner;
 import android.widget.TextView;
 
 import java.util.List;
@@ -22,12 +24,13 @@ import sm.fr.todoapp.model.DatabaseHandler;
 import sm.fr.todoapp.model.Task;
 import sm.fr.todoapp.model.TaskDAO;
 
-public class MainActivity extends AppCompatActivity {
+public class MainActivity extends AppCompatActivity implements AdapterView.OnItemSelectedListener{
 
     public static final int TASK_FORM = 1;
 
     private ListView taskListView;
     private List<Task> taskList;
+    private Spinner spinnerStatus;
     private DatabaseHandler db;
     private TaskDAO dao;
 
@@ -40,13 +43,26 @@ public class MainActivity extends AppCompatActivity {
         this.dao = new TaskDAO(this.db);
 
         taskListView = findViewById(R.id.todoListView);
+        spinnerStatus = findViewById(R.id.spinnerStatus);
 
+        spinnerStatus.setOnItemSelectedListener(this);
+
+        this.taskList = this.dao.findAll();
         initTaskList();
 
     }
 
     private void initTaskList(){
-        this.taskList = this.dao.findAll();
+        String status = this.spinnerStatus.getSelectedItem().toString();
+
+        if(status.equals("Toutes")){
+            this.taskList = this.dao.findAll();
+        } else if(status.equals("En cours")){
+            this.taskList = this.dao.findAllPendingTasks();
+        } else {
+            this.taskList = this.dao.findAllDoneTasks();
+        }
+
         TaskArrayAdapter adapter = new TaskArrayAdapter(this,R.layout.list_view_task, this.taskList);
         this.taskListView.setAdapter(adapter);
     }
@@ -70,8 +86,19 @@ public class MainActivity extends AppCompatActivity {
     @Override
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
         if(requestCode == TASK_FORM && resultCode == RESULT_OK){
+            this.taskList = this.dao.findAll();
             initTaskList();
         }
+    }
+
+    @Override
+    public void onItemSelected(AdapterView<?> adapterView, View view, int i, long l) {
+        initTaskList();
+    }
+
+    @Override
+    public void onNothingSelected(AdapterView<?> adapterView) {
+
     }
 
     /**

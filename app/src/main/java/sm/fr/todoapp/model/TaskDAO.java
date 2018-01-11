@@ -74,6 +74,33 @@ public class TaskDAO implements DAOInterface<Task> {
         return TaskList;
     }
 
+    private List<Task> findAllByDoneStatus(Boolean done) throws SQLiteException{
+        //Instanciation de la liste des Tasks
+        List<Task> TaskList = new ArrayList<>();
+
+        //Exécution de la requête sql
+        String sql = "SELECT id, task_name, done FROM tasks WHERE done=?";
+        String[] params = {done?"1":"0"};
+        Cursor cursor = this.db.getReadableDatabase().rawQuery(sql, params);
+        //Boucle sur le curseur
+        while(cursor.moveToNext()){
+            TaskList.add(this.hydrateTask(cursor));
+        }
+
+        //Fermeture du curseur
+        cursor.close();
+
+        return TaskList;
+    }
+
+    public List<Task> findAllPendingTasks(){
+        return this.findAllByDoneStatus(false);
+    }
+
+    public List<Task> findAllDoneTasks(){
+        return this.findAllByDoneStatus(true);
+    }
+
     /**
      * Suppression d'un tâche en fonction de sa clef primaire
      * @param id
