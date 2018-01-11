@@ -1,21 +1,27 @@
 package sm.fr.todoapp.controller;
 
 import android.app.Activity;
+import android.app.AlertDialog;
 import android.content.Context;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.CheckBox;
+import android.widget.ImageButton;
+import android.widget.ImageView;
 import android.widget.ListView;
 import android.widget.Spinner;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import java.util.List;
 
@@ -46,6 +52,7 @@ public class MainActivity extends AppCompatActivity implements AdapterView.OnIte
         spinnerStatus = findViewById(R.id.spinnerStatus);
 
         spinnerStatus.setOnItemSelectedListener(this);
+
 
         this.taskList = this.dao.findAll();
         initTaskList();
@@ -83,10 +90,17 @@ public class MainActivity extends AppCompatActivity implements AdapterView.OnIte
         this.dao.persist(task);
     }
 
+    /**
+     * Retour du formulaire de création d'une nouvelle tâche
+     * @param requestCode
+     * @param resultCode
+     * @param data
+     */
     @Override
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
         if(requestCode == TASK_FORM && resultCode == RESULT_OK){
             this.taskList = this.dao.findAll();
+            spinnerStatus.setSelection(0);
             initTaskList();
         }
     }
@@ -99,6 +113,41 @@ public class MainActivity extends AppCompatActivity implements AdapterView.OnIte
     @Override
     public void onNothingSelected(AdapterView<?> adapterView) {
 
+    }
+
+
+    /**
+     * Confirmation de la suppression
+     * @param id
+     * @return
+     */
+    private AlertDialog getConfirmDeleteDialog(final Long id){
+        AlertDialog.Builder dialogBuilder = new AlertDialog.Builder(this);
+        dialogBuilder.setMessage("Voulez-vous vraiment supprimer cette tâche ?");
+        dialogBuilder.setPositiveButton("OUI", new DialogInterface.OnClickListener() {
+            @Override
+            public void onClick(DialogInterface dialog, int i) {
+                dao.deleteOneById(id);
+                initTaskList();
+                dialog.dismiss();
+            }
+        });
+
+        dialogBuilder.setNegativeButton("NON", new DialogInterface.OnClickListener() {
+            @Override
+            public void onClick(DialogInterface dialog, int i) {
+                dialog.dismiss();
+            }
+        });
+
+        return dialogBuilder.create();
+    }
+
+    public void onDelete(View v){
+        int position = (int) v.getTag();
+        Task task = this.taskList.get(position);
+        AlertDialog dialog = getConfirmDeleteDialog(task.getId());
+        dialog.show();
     }
 
     /**
@@ -130,6 +179,9 @@ public class MainActivity extends AppCompatActivity implements AdapterView.OnIte
 
             CheckBox checkDone = v.findViewById(R.id.checkboxTaskDone);
             checkDone.setChecked(currentTask.isDone());
+
+            ImageView deleteButton = v.findViewById(R.id.deleteButton);
+            deleteButton.setTag(position);
 
             //Le tag permet de transmettre une information au gestionnaire d'événement
             checkDone.setTag(position);
