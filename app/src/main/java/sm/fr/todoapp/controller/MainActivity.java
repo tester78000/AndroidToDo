@@ -67,6 +67,13 @@ public class MainActivity extends AppCompatActivity {
         this.dao.persist(task);
     }
 
+    @Override
+    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+        if(requestCode == TASK_FORM && resultCode == RESULT_OK){
+            initTaskList();
+        }
+    }
+
     /**
      * ArrayAdapter pour la liste des tâche
      */

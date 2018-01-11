@@ -46,7 +46,7 @@ public class TaskDAO implements DAOInterface<Task> {
 
         Task.setId(cursor.getLong(0));
         Task.setTaskName(cursor.getString(1));
-        Task.setDone(cursor.getString(2) != "0");
+        Task.setDone(! cursor.getString(2).equals("0"));
 
         return Task;
     }
