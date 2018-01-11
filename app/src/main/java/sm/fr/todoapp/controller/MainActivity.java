@@ -1,7 +1,9 @@
 package sm.fr.todoapp.controller;
 
 import android.app.Activity;
+import android.app.AlertDialog;
 import android.content.Context;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
@@ -24,7 +26,7 @@ import sm.fr.todoapp.model.DatabaseHandler;
 import sm.fr.todoapp.model.Task;
 import sm.fr.todoapp.model.TaskDAO;
 
-public class MainActivity extends AppCompatActivity implements AdapterView.OnItemSelectedListener{
+public class MainActivity extends AppCompatActivity implements AdapterView.OnItemSelectedListener, AdapterView.OnItemLongClickListener{
 
     public static final int TASK_FORM = 1;
 
@@ -46,6 +48,7 @@ public class MainActivity extends AppCompatActivity implements AdapterView.OnIte
         spinnerStatus = findViewById(R.id.spinnerStatus);
 
         spinnerStatus.setOnItemSelectedListener(this);
+        taskListView.setOnItemLongClickListener(this);
 
         this.taskList = this.dao.findAll();
         initTaskList();
@@ -99,6 +102,38 @@ public class MainActivity extends AppCompatActivity implements AdapterView.OnIte
     @Override
     public void onNothingSelected(AdapterView<?> adapterView) {
 
+    }
+
+
+
+    private AlertDialog getConfirmDeleteDialog(final Long id){
+        AlertDialog.Builder dialogBuilder = new AlertDialog.Builder(this);
+        dialogBuilder.setMessage("Voulez-vous vraiment supprimer cette tâche ?");
+        dialogBuilder.setPositiveButton("OUI", new DialogInterface.OnClickListener() {
+            @Override
+            public void onClick(DialogInterface dialog, int i) {
+                dao.deleteOneById(id);
+                dialog.dismiss();
+            }
+        });
+
+        dialogBuilder.setNegativeButton("NON", new DialogInterface.OnClickListener() {
+            @Override
+            public void onClick(DialogInterface dialog, int i) {
+                dialog.dismiss();
+            }
+        });
+
+        return dialogBuilder.create();
+    }
+
+    @Override
+    public boolean onItemLongClick(AdapterView<?> adapterView, View view, int position, long l) {
+
+        Task task = this.taskList.get(position);
+        AlertDialog dialog = getConfirmDeleteDialog(task.getId());
+        dialog.show();
+        return true;
     }
 
     /**
