@@ -40,6 +40,10 @@ public class MainActivity extends AppCompatActivity implements AdapterView.OnIte
     private DatabaseHandler db;
     private TaskDAO dao;
 
+    /**
+     * Création de l'activité
+     * @param savedInstanceState
+     */
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -58,9 +62,17 @@ public class MainActivity extends AppCompatActivity implements AdapterView.OnIte
 
     }
 
+    /**
+     * Initialisation de la liste des tâches
+     * dans un composant ListView
+     * Les données présentées dépendes de la sélection du statuts
+     */
     private void initTaskList(){
+        //Récupération du statut séléctionné
         String status = this.spinnerStatus.getSelectedItem().toString();
 
+        //Récupération d'une liste e de tâches
+        //En fonction du statut
         if(status.equals("Toutes")){
             this.taskList = this.dao.findAll();
         } else if(status.equals("En cours")){
@@ -69,26 +81,48 @@ public class MainActivity extends AppCompatActivity implements AdapterView.OnIte
             this.taskList = this.dao.findAllDoneTasks();
         }
 
+        //Instanciation de l'adapter
         TaskArrayAdapter adapter = new TaskArrayAdapter(this,R.layout.list_view_task, this.taskList);
+        //Liaison entre l'adapter et la ListView
         this.taskListView.setAdapter(adapter);
     }
 
+    /**
+     * Ouverture du formulaire de Création d'une tâche
+     * @param v
+     */
     public void onNewTask(View v){
         Intent intentNewTask = new Intent(this, TaskFormActivity.class);
         startActivityForResult(intentNewTask, TASK_FORM);
     }
 
+    /**
+     * Coche d'une case dans la ListView
+     * Met à jour l'entité et persiste celle ci en base de données
+     * @param v
+     */
     public void onCheck(View v){
+        //Récupération de la position taguée
         int position = (int)v.getTag();
+
+        //Récupération de l'état de la case à cocher
         CheckBox check = (CheckBox) v;
         boolean done = check.isChecked();
 
+        //Récupération et modification de l'entité
         Task task = this.taskList.get(position);
         task.setDone(done);
 
+        //Persistence des données
         this.dao.persist(task);
     }
 
+    /**
+     * Retour du formulaire de création de tâche
+     * @param requestCode
+     * @param resultCode
+     * @param data
+     */
     @Override
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
         if(requestCode == TASK_FORM && resultCode == RESULT_OK){
@@ -97,6 +131,13 @@ public class MainActivity extends AppCompatActivity implements AdapterView.OnIte
         }
     }
 
+    /**
+     * Changement de statut
+     * @param adapterView
+     * @param view
+     * @param i
+     * @param l
+     */
     @Override
     public void onItemSelected(AdapterView<?> adapterView, View view, int i, long l) {
         initTaskList();
@@ -116,6 +157,7 @@ public class MainActivity extends AppCompatActivity implements AdapterView.OnIte
     private AlertDialog getConfirmDeleteDialog(final Long id){
         AlertDialog.Builder dialogBuilder = new AlertDialog.Builder(this);
         dialogBuilder.setMessage("Voulez-vous vraiment supprimer cette tâche ?");
+        //Gestion de la confirmation OK
         dialogBuilder.setPositiveButton("OUI", new DialogInterface.OnClickListener() {
             @Override
             public void onClick(DialogInterface dialog, int i) {
@@ -125,6 +167,7 @@ public class MainActivity extends AppCompatActivity implements AdapterView.OnIte
             }
         });
 
+        //Gestion de la confirmation KO
         dialogBuilder.setNegativeButton("NON", new DialogInterface.OnClickListener() {
             @Override
             public void onClick(DialogInterface dialog, int i) {
@@ -135,9 +178,15 @@ public class MainActivity extends AppCompatActivity implements AdapterView.OnIte
         return dialogBuilder.create();
     }
 
+    /**
+     * Clic sur le bouton supprimer
+     * @param v
+     */
     public void onDelete(View v){
+        //Récupération de la position taguée
         int position = (int) v.getTag();
         Task task = this.taskList.get(position);
+        //Affichage de la confirmation
         AlertDialog dialog = getConfirmDeleteDialog(task.getId());
         dialog.show();
     }
@@ -150,6 +199,12 @@ public class MainActivity extends AppCompatActivity implements AdapterView.OnIte
         int layout;
         Activity context;
 
+        /**
+         * Constructeur de l'adapter
+         * @param context
+         * @param resource
+         * @param data
+         */
         public TaskArrayAdapter(@NonNull Activity context, int resource, @NonNull List<Task> data) {
             super(context, resource, data);
             this.context = context;
@@ -158,24 +213,36 @@ public class MainActivity extends AppCompatActivity implements AdapterView.OnIte
 
         }
 
+        /**
+         * Affichage d'une ligne
+         * @param position
+         * @param convertView
+         * @param parent
+         * @return
+         */
         @NonNull
         @Override
         public View getView(int position, @Nullable View convertView, @NonNull ViewGroup parent) {
+            //Obtention de la vue
             LayoutInflater inflater = this.context.getLayoutInflater();
             View v = inflater.inflate(this.layout, parent, false);
 
+            //Récupération de l'entité
             Task currentTask = this.data.get(position);
 
+            //Affichage du texte de la tâche
             TextView textView = v.findViewById(R.id.textViewTaskName);
             textView.setText(currentTask.getTaskName());
 
+            //Affichage de la case à cocher
             CheckBox checkDone = v.findViewById(R.id.checkboxTaskDone);
             checkDone.setChecked(currentTask.isDone());
 
+            //Référence au bouton supprimer
             ImageView deleteButton = v.findViewById(R.id.deleteButton);
-            deleteButton.setTag(position);
 
             //Le tag permet de transmettre une information au gestionnaire d'événement
+            deleteButton.setTag(position);
             checkDone.setTag(position);
 
             return v;

@@ -1,6 +1,8 @@
 package sm.fr.todoapp.model;
 
-
+/**
+ * Entité modèlisant une tâche
+ */
 public class Task {
 
     private String taskName;

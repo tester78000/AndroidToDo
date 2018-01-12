@@ -3,12 +3,15 @@ package sm.fr.todoapp.model;
 import android.content.ContentValues;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteException;
-
 import java.util.ArrayList;
 import java.util.List;
 
+/**
+ * Composant d'accès à la table des tâches
+ */
 public class TaskDAO implements DAOInterface<Task> {
 
+    //Gestionnaire de connexion
     private DatabaseHandler db;
 
     public TaskDAO(DatabaseHandler db) {
@@ -16,12 +19,11 @@ public class TaskDAO implements DAOInterface<Task> {
     }
 
     /**
-     * Récupération d'un Task en fonction de sa clef primaire (id)
+     * Récupération d'une entité Task en fonction de sa clef primaire (id)
      * @param id
      * @return
      */
     @Override
-
     public Task findOneById(int id) throws SQLiteException{
         //Exécution de la requête
         String[] params = {String.valueOf(id)};
@@ -41,6 +43,11 @@ public class TaskDAO implements DAOInterface<Task> {
         return Task;
     }
 
+    /**
+     * Hydratation d'une entité Task en fonction des donnée's d'un curseur
+     * @param cursor
+     * @return
+     */
     private Task hydrateTask(Cursor cursor) {
         Task Task = new Task();
 
@@ -52,7 +59,7 @@ public class TaskDAO implements DAOInterface<Task> {
     }
 
     /**
-     *
+     * Requête sur l'ensemble des tâches en base de données
      * @return List<Task> une liste de Tasks
      */
     @Override
@@ -65,6 +72,7 @@ public class TaskDAO implements DAOInterface<Task> {
         Cursor cursor = this.db.getReadableDatabase().rawQuery(sql, null);
         //Boucle sur le curseur
         while(cursor.moveToNext()){
+            //Remplissage de la liste
             TaskList.add(this.hydrateTask(cursor));
         }
 
@@ -74,6 +82,12 @@ public class TaskDAO implements DAOInterface<Task> {
         return TaskList;
     }
 
+    /**
+     * Requête sur les tâches en fonction du statut
+     * @param done
+     * @return List<Task> Liste de tâches
+     * @throws SQLiteException
+     */
     private List<Task> findAllByDoneStatus(Boolean done) throws SQLiteException{
         //Instanciation de la liste des Tasks
         List<Task> TaskList = new ArrayList<>();
@@ -92,6 +106,7 @@ public class TaskDAO implements DAOInterface<Task> {
 
         return TaskList;
     }
+
 
     public List<Task> findAllPendingTasks(){
         return this.findAllByDoneStatus(false);
@@ -113,6 +128,10 @@ public class TaskDAO implements DAOInterface<Task> {
         this.db.getWritableDatabase().execSQL(sql, params);
     }
 
+    /**
+     * Persistence d'une entité
+     * @param entity
+     */
     @Override
     public void persist(Task entity){
         if(entity.getId() == null){
@@ -122,6 +141,12 @@ public class TaskDAO implements DAOInterface<Task> {
         }
     }
 
+    /**
+     * Constitution d'un tableau de colonnes / valeurs
+     * pour l'insertion ou la mise à jour de la table tasks
+     * @param entity
+     * @return
+     */
     private ContentValues getContentValuesFromEntity(Task entity){
         ContentValues values = new ContentValues();
         values.put("task_name", entity.getTaskName());
@@ -130,6 +155,10 @@ public class TaskDAO implements DAOInterface<Task> {
         return values;
     }
 
+    /**
+     * Insertion dans la base de données
+     * @param entity
+     */
     private void insert(Task entity) {
         Long id = this.db.getWritableDatabase().insert(
                 "tasks", null,
@@ -138,6 +167,10 @@ public class TaskDAO implements DAOInterface<Task> {
         entity.setId(id);
     }
 
+    /**
+     * Mise à jour d'une ligne de la table tasks
+     * @param entity
+     */
     private void update(Task entity){
         String[] params = {entity.getId().toString()};
         this.db.getWritableDatabase().update(

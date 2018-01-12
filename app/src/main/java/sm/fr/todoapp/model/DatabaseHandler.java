@@ -22,13 +22,24 @@ public class DatabaseHandler extends SQLiteOpenHelper{
         super(context, DATABASE_NAME, null, DATABASE_VERSION);
     }
 
+    /**
+     * Création de la base de données si inexistante
+     * @param sqLiteDatabase
+     */
     @Override
     public void onCreate(SQLiteDatabase sqLiteDatabase) {
         sqLiteDatabase.execSQL(TASK_TABLE_SQL);
     }
 
+    /**
+     * Mise à jour de la base de données
+     * si la version sur le téléphone est inférieure à la version en cours
+     * @param sqLiteDatabase
+     * @param oldVersionNumber
+     * @param newVersionNumber
+     */
     @Override
-    public void onUpgrade(SQLiteDatabase sqLiteDatabase, int i, int i1) {
+    public void onUpgrade(SQLiteDatabase sqLiteDatabase, int oldVersionNumber, int newVersionNumber) {
         sqLiteDatabase.execSQL("DROP TABLE IF EXISTS tasks");
         this.onCreate(sqLiteDatabase);
     }

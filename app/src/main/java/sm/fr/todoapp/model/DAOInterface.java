@@ -5,7 +5,7 @@ import android.database.sqlite.SQLiteException;
 import java.util.List;
 
 /**
- * Created by Formation on 11/01/2018.
+ * Interface générique pour tous les DAO
  */
 
 interface DAOInterface <DTO>{

@@ -19,6 +19,10 @@ public class TaskFormActivity extends AppCompatActivity {
 
     EditText editTextTaskName;
 
+    /**
+     * Création de l'activité
+     * @param savedInstanceState
+     */
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -32,6 +36,10 @@ public class TaskFormActivity extends AppCompatActivity {
         }
     }
 
+    /**
+     * Validation du formulaire
+     * @param view
+     */
     public void onValidForm(View view) {
         String taskName = this.editTextTaskName.getText().toString();
 
@@ -44,6 +52,10 @@ public class TaskFormActivity extends AppCompatActivity {
         }
     }
 
+    /**
+     * Traitement des données du formulaire
+     * @param task
+     */
     private void processForm(Task task){
         DatabaseHandler db = new DatabaseHandler(this);
         TaskDAO dao = new TaskDAO(db);
