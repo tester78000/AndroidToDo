@@ -53,7 +53,6 @@ public class MainActivity extends AppCompatActivity implements AdapterView.OnIte
 
         spinnerStatus.setOnItemSelectedListener(this);
 
-
         this.taskList = this.dao.findAll();
         initTaskList();
 
@@ -90,17 +89,10 @@ public class MainActivity extends AppCompatActivity implements AdapterView.OnIte
         this.dao.persist(task);
     }
 
-    /**
-     * Retour du formulaire de création d'une nouvelle tâche
-     * @param requestCode
-     * @param resultCode
-     * @param data
-     */
     @Override
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
         if(requestCode == TASK_FORM && resultCode == RESULT_OK){
             this.taskList = this.dao.findAll();
-            spinnerStatus.setSelection(0);
             initTaskList();
         }
     }
