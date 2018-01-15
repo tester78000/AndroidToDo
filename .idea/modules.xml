@@ -2,8 +2,10 @@
 <project version="4">
   <component name="ProjectModuleManager">
     <modules>
-      <module fileurl="file://$PROJECT_DIR$/TodoApp.iml" filepath="$PROJECT_DIR$/TodoApp.iml" />
+      <module fileurl="file://$PROJECT_DIR$/AndroidTodoApp.iml" filepath="$PROJECT_DIR$/AndroidTodoApp.iml" />
+      <module fileurl="file://C:\Users\Formation.M2I-JAV5-04\Desktop\workspace\dao\AndroidTodoApp\TodoApp.iml" filepath="C:\Users\Formation.M2I-JAV5-04\Desktop\workspace\dao\AndroidTodoApp\TodoApp.iml" />
       <module fileurl="file://$PROJECT_DIR$/app/app.iml" filepath="$PROJECT_DIR$/app/app.iml" />
+      <module fileurl="file://C:\Users\Formation.M2I-JAV5-04\Desktop\workspace\dao\AndroidTodoApp\app\app.iml" filepath="C:\Users\Formation.M2I-JAV5-04\Desktop\workspace\dao\AndroidTodoApp\app\app.iml" />
     </modules>
   </component>
 </project>
