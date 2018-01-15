@@ -29,4 +29,10 @@
         android:layout_weight="1"
         android:onClick="onValidForm"
         android:text="Valider" />
+
+    <ImageView
+        android:layout_width="match_parent"
+        android:layout_height="280dp"
+        android:layout_weight="1"
+        android:src="@drawable/ic_android_black_24dp" />
 </LinearLayout>

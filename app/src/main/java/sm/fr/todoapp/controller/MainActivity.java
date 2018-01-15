@@ -52,12 +52,14 @@ public class MainActivity extends AppCompatActivity implements AdapterView.OnIte
         this.db = new DatabaseHandler(this);
         this.dao = new TaskDAO(this.db);
 
+        this.dao.insertTodo(this.db.getWritableDatabase());
+
         taskListView = findViewById(R.id.todoListView);
         spinnerStatus = findViewById(R.id.spinnerStatus);
 
         spinnerStatus.setOnItemSelectedListener(this);
 
-        this.taskList = this.dao.findAll();
+        //this.taskList = this.dao.findAll();
         initTaskList();
 
     }
@@ -71,7 +73,7 @@ public class MainActivity extends AppCompatActivity implements AdapterView.OnIte
         //Récupération du statut séléctionné
         String status = this.spinnerStatus.getSelectedItem().toString();
 
-        //Récupération d'une liste e de tâches
+        //Récupération d'une liste de tâches
         //En fonction du statut
         if(status.equals("Toutes")){
             this.taskList = this.dao.findAll();
@@ -82,7 +84,10 @@ public class MainActivity extends AppCompatActivity implements AdapterView.OnIte
         }
 
         //Instanciation de l'adapter
-        TaskArrayAdapter adapter = new TaskArrayAdapter(this,R.layout.list_view_task, this.taskList);
+        TaskArrayAdapter adapter = new TaskArrayAdapter(
+                this
+                ,R.layout.list_view_task
+                ,this.taskList);
         //Liaison entre l'adapter et la ListView
         this.taskListView.setAdapter(adapter);
     }
@@ -126,7 +131,7 @@ public class MainActivity extends AppCompatActivity implements AdapterView.OnIte
     @Override
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
         if(requestCode == TASK_FORM && resultCode == RESULT_OK){
-            this.taskList = this.dao.findAll();
+            //this.taskList = this.dao.findAll();
             initTaskList();
         }
     }

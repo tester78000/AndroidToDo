@@ -2,7 +2,10 @@ package sm.fr.todoapp.model;
 
 import android.content.ContentValues;
 import android.database.Cursor;
+import android.database.sqlite.SQLiteDatabase;
 import android.database.sqlite.SQLiteException;
+import android.database.sqlite.SQLiteStatement;
+
 import java.util.ArrayList;
 import java.util.List;
 
@@ -179,5 +182,25 @@ public class TaskDAO implements DAOInterface<Task> {
                 "id=?",
                 params
         );
+    }
+
+
+
+    public void insertTodo(SQLiteDatabase db){
+        if(this.db.isNew()){
+            String sql = "INSERT INTO tasks (task_name, done)  VALUES (?,?)";
+            //Compilation de la requête
+            SQLiteStatement statement = db.compileStatement(sql);
+
+            //Définition des données et exécution multiples de la requête
+            statement.bindString(1, "Sortir le chat");
+            statement.bindLong(2, 0);
+            statement.executeInsert();
+
+            //Deuxième requête
+            statement.bindString(1, "Sortir la poubelle");
+            statement.bindLong(2, 0);
+            statement.executeInsert();
+        }
     }
 }

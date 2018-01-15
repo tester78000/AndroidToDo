@@ -43,7 +43,7 @@ public class TaskFormActivity extends AppCompatActivity {
     public void onValidForm(View view) {
         String taskName = this.editTextTaskName.getText().toString();
 
-        if (taskName.trim() == "") {
+        if (taskName.trim().equals("")) {
             String message = "La tâche ne peut être vide";
             Toast.makeText(this, message, Toast.LENGTH_SHORT).show();
         } else {
